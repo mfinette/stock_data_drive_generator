@@ -4,16 +4,12 @@ import ta
 import json
 import requests
 
-########################################################################################################################################################
+# Read the tickers from list.txt file
+with open('list.txt') as f:
+    tickers = [line.strip().upper() for line in f]
+
 # Create a Pandas Excel writer using XlsxWriter as the engine
 writer = pd.ExcelWriter('stocks_data.xlsx', engine='xlsxwriter')
-
-tickers = []
-while True:
-    ticker = input("Enter a ticker symbol (enter 'done' when finished): ")
-    if ticker.lower() == 'done':
-        break
-    tickers.append(ticker.upper())
 
 for ticker in tickers:
     sheet_name = ticker
@@ -56,26 +52,3 @@ for ticker in tickers:
 
 # Save the Excel file
 writer.close()
-########################################################################################################################################################
-
-#drive part :DDDDDDDDDDDDDDDDDD
-var = input("Send file? (yes or no)")
-if var.lower() == 'yes':
-    headers = {
-        "Authorization":"Bearer ya29.a0AVvZVsqXb-ltLAtCXI5CdzSsoGQt3Vqig1hmFtYbMccVh3JoGWM6ILLZA3omQPedAZV5XNBw9id-5a3cyM9SktIj6Iqv9w-ADgCQB0rHJ9IzmU8utp3wV-RxWC1wcfIQuUYReFKPN7TwN6qE7SeVpG0sN9q_aCgYKAcoSARASFQGbdwaIYtvJsU2y_sacbDX5ZKG6vg0163"
-    }
-    
-    para = {
-        "name":"stocks_data.xlsx",
-        "parents":["1uXwXat5YKMD71koxv8Ox6dPRkUT9hGun"]
-    }
-    
-    files = {
-        'data':('metadata',json.dumps(para),'application/json;charset=UTF-8'),
-        'file':open('./stocks_data.xlsx','rb')
-    }
-    
-    r = requests.post("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
-        headers=headers,
-        files=files
-    )
