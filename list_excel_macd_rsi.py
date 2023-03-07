@@ -46,19 +46,23 @@ for ticker in tickers:
     data['MACD_signal_monthly'] = data['MACD_monthly'].ewm(span=9, adjust=False).mean()
     data['MACD_signal_weekly'] = data['MACD_weekly'].ewm(span=9, adjust=False).mean()
 
-    # Calculate stochastic oscillators
-    data['%K'] = ta.momentum.stoch(data['High'], data['Low'], data['Close'], window=14, smooth_window=3)
-    data['%D'] = data['%K'].rolling(window=3).mean()
-    data['%K_89'] = ta.momentum.stoch(data['High'], data['Low'], data['Close'], window=89, smooth_window=3)
-    data['%D_89'] = data['%K_89'].rolling(window=3).mean()
-    data['%K_5'] = ta.momentum.stoch(data['High'], data['Low'], data['Close'], window=5, smooth_window=3)
-    data['%D_5'] = data['%K_5'].rolling(window=3).mean()
+    # Calculate stochastic oscillator
+    data['%K_daily_5'] = ta.momentum.stoch(data['High'], data['Low'], data['Close'], window=5, smooth_window=3)
+    data['%D_daily_5'] = data['%K_daily_5'].rolling(window=3).mean()
+    data['%K_weekly_5'] = ta.momentum.stoch(data['High'], data['Low'], data['Close'], window=5*7, smooth_window=3)
+    data['%D_weekly_5'] = data['%K_weekly_5'].rolling(window=3).mean()
+    data['%K_monthly_5'] = ta.momentum.stoch(data['High'], data['Low'], data['Close'], window=5*30, smooth_window=3)
+    data['%D_monthly_5'] = data['%K_monthly_5'].rolling(window=3).mean()
 
+    data['%K_daily_89'] = ta.momentum.stoch(data['High'], data['Low'], data['Close'], window=89, smooth_window=3)
+    data['%D_daily_89'] = data['%K_daily_89'].rolling(window=3).mean()
+    data['%K_weekly_89'] = ta.momentum.stoch(data['High'], data['Low'], data['Close'], window=89*7, smooth_window=3)
+    data['%D_weekly_89'] = data['%K_weekly_89'].rolling(window=3).mean()
     # Format date column
     data['date'] = data.index.date.astype(str)
 
     # Reorder columns
-    data = data[['date', 'High', 'Low', 'Close', 'Volume', 'MACD', 'MACD_signal', 'MACD_weekly', 'MACD_signal_weekly', 'MACD_monthly', 'MACD_signal_monthly', '%K', '%D', '%K_89', '%D_89', '%K_5', '%D_5', 'RSI']]
+    data = data[['date', 'Open', 'High', 'Low', 'Close', 'Volume', 'MACD', 'MACD_signal', 'MACD_weekly', 'MACD_signal_weekly', 'MACD_monthly', 'MACD_signal_monthly', '%K_daily_5', '%D_daily_5', '%K_weekly_5', '%D_weekly_5', '%K_monthly_5', '%D_monthly_5','%K_daily_89', '%D_daily_89', '%K_weekly_89', '%D_weekly_89', 'RSI', 'RSI_weekly']]
     data = data.sort_values(by='date', ascending=False)
 
     # Write to Excel
@@ -71,7 +75,7 @@ writer.close()
 var = input("Send file? (yes or no)")
 if var.lower() == 'yes':
     headers = {
-        "Authorization":"Bearer ya29.a0AVvZVsqJT0lATEV_CawvtbD5pqiNkNgQRDUhYJmKjiqoJej_rO5yYarwMpGVmAwDMToSxaRKvzZ1Ors0840RP9OjDx39A1vMmMp3rjtaxoPvHUZWlUvJuti-b7MyTY_f-tZaYNV6dsYplv6HCM-3FwEiNAW1aCgYKAVsSARASFQGbdwaIrYq0WPtQBq8fJNppCBwZIA0163"
+        "Authorization":"Bearer ya29.a0AVvZVsrn_7TMng1MC67opmomm7DRZmcjIDT9tIegvEnYPd6i5g94ZA6hzwuRVPD1P4qLCZFnPmBZoMRuUx52mqKfijG7rRaJYOfhv6fgHmCRHKpcAkry-bkXe9OxaPEJnectEWq-N989S8RmZOGACflcJ9JOaCgYKATISARASFQGbdwaIhvfYqFojy1UT8uH4oCGjzA0163"
     }
     
     para = {
